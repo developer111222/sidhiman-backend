@@ -5,6 +5,7 @@ require('dotenv').config();
 const fs = require("fs");
 const path = require("path");
 const dbconnect=require('./database/db');
+const cookieParser = require('cookie-parser');
 const userRoute=require('./route/userroute');
 const bannerroute=require('./route/bannerroute');
 const blogroute=require('./route/blogroute');
@@ -14,24 +15,44 @@ const pageseoroute=require('./route/pageseoroute');
 const blogcategory=require('./route/blocategoryroute');
 const galleryroute=require('./route/galleryroute');
 const newsletterroute=require('./route/newsletterroute');
+const orderroute=require('./route/orderroute');
+const gallerycategoryroute=require('./route/gallerycategoryroute');
 
+const crypto=require('crypto')
 const upload=require('./middleware/multer')
 
 const uploadDir = path.join(__dirname, "upload");
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-app.use('/upload', express.static('upload'));
-//-------------cors configuration-----------
-
-app.use(cors());
 const corsOptions = {
-    origin: 'http://localhost:3000,*',
+    origin: 'http://localhost:3000',  
+    methods: ["GET", "PUT", "POST", "DELETE","PATCH", "OPTIONS"],
+    allowedHeaders: [
+        "Access-Control-Allow-Origin",
+        "Content-Type",
+        "Authorization",
+        "cookies"
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
-    allowedHeaders: ['Content-Type', 'Authorization']
+    preflightContinue: false
+};
+app.use(cors(corsOptions));
 
-}
+
+
+
+
+
+
+
+app.use('/upload', express.static('upload'));
+
+
+
 // Upload multiple images
 app.post("/api/upload-images", upload.array("images", 10), (req, res) => {
     if (!req.files || req.files.length === 0) {
@@ -67,7 +88,9 @@ app.use('/api',formroute);
 app.use('/api',pageseoroute);
 app.use('/api',blogcategory);
 app.use('/api',galleryroute);
-app.use('/api',newsletterroute)
+app.use('/api',newsletterroute);
+app.use('/api',orderroute);
+app.use('/api',gallerycategoryroute);
 
 
 

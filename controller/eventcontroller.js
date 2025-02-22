@@ -1,4 +1,5 @@
 const Event = require('../model/eventmodel')
+const { default: slugify } = require('slugify');
 
 
 //-----------------------------create event----------------------------------
@@ -6,18 +7,18 @@ const Event = require('../model/eventmodel')
 exports.createEvent = async (req, res) => {
 
     try {
-        const { title, description, location, startDate, endDate, openingTime, closeTime } = req.body;
+        const { title, content, location, startDate, endDate, openingTime, closeTime } = req.body;
         const image = req.file ? req.file.filename : null;
         const author = req.user.id;
         // Validate required fields
-        if (!title || !description || !location || !startDate || !endDate || !openingTime || !closeTime) {
+        if (!title || !content || !location || !startDate || !endDate || !openingTime || !closeTime) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
         // Create a new event
         const newEvent = new Event({
             title,
-            description,
+            content,
             location,
             startDate,
             endDate,
@@ -57,7 +58,7 @@ exports.getSingleEvent = async (req, res, next) => {
     const slug = req.params.id;
     console.log(slug)
     try {
-        const event = await Event.find({ slug }).populate('author', 'username');
+        const event = await Event.findOne({ slug }).populate('author', 'username');
         if (!event) {
             return res.status(404).json({ message: 'Event not found' });
         }
@@ -72,37 +73,61 @@ exports.getSingleEvent = async (req, res, next) => {
 //-----------------------------update event----------------------------------
 
 
-exports.updateEvent = async (req, res, next) => {
 
+exports.updateEvent = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { title, description, location, startDate, endDate, openingTime, closeTime } = req.body;
-        const image = req.file ? req.file.filename : null;
-        const author = req.user.id;
+        const slug = req.params.id;  // Use the `id` from the request parameters for slug
+        console.log(slug, "slug");
 
-        const event = await Event.findById(id);
+        const { title, content, location, startDate, endDate, openingTime, closeTime } = req.body;
+        const image = req.file ? req.file.filename : null;
+
+        const event = await Event.findOne({slug});  // Find the event by slug
         if (!event) {
             return res.status(404).json({ message: 'Event not found' });
         }
 
-        const updatedData = await Event.findByIdAndUpdate(id, {
-            title,
-            description,
-            location,
-            startDate,
-            endDate,
-            openingTime,
-            closeTime,
-            image,
-            author
-        })
+        // Regenerate slug if the title has changed
+        if (title && title !== event.title) {
+            console.log(event.title, "eveny");
+            event.title = title;
+            event.slug = slugify(title, { lower: true, strict: true });  // Update the slug
+        }
 
-        return res.status(200).json({ message: "update successfully" })
+        // Check if the new slug already exists (excluding the current event)
+        if (req.body.slug && req.body.slug !== event.slug) {
+            const existingSlug = await Event.findOne({ slug: req.body.slug });
+            if (existingSlug) {
+                return res.status(400).json({ message: 'Slug already in use' });
+            }
+        }
+
+        // Update fields based on the request body
+        if (title) event.title = title;
+        if (content) event.content = content;
+        if (location) event.location = location;
+        if (startDate) event.startDate = startDate;
+        if (endDate) event.endDate = endDate;
+        if (openingTime) event.openingTime = openingTime;
+        if (closeTime) event.closeTime = closeTime;
+
+        // Don't update the image if no new image is uploaded
+        if (image !== null) {
+            event.image = image;  // Update the image if new one is uploaded
+        }
+
+        console.log("Updated event data:", event);
+
+        // Save the updated event document
+        const updatedEvent = await event.save();  // This will save all changes to the event
+
+        return res.status(200).json({ message: 'Event updated successfully', event: updatedEvent });
 
     } catch (error) {
-        return res.status(500).json({ message: "server error", error: error.message })
+        return res.status(500).json({ message: 'Failed to update event', error: error.message });
     }
-}
+};
+
 
 
 //-----------------------------------delete events-------------------------------------

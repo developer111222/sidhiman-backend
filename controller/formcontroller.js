@@ -7,10 +7,21 @@ exports.createForm=async(req,res)=>{
 
     try {
         const { name, email, phone, question } = req.body;
+        console.log(req.body)
 
         // Validate required fields
         if (!name || !question || !email || !phone) {
             return res.status(400).json({ message: 'All fields are required' });
+        }
+        // Check if email or phone already exists
+        const existingEmail = await Form.findOne({ email });
+        if (existingEmail) {
+            return res.status(400).json({ message: 'Email already exists' });
+        }
+
+        const existingPhone = await Form.findOne({ phone });
+        if (existingPhone) {
+            return res.status(400).json({ message: 'Phone number already exists' });
         }
 
         const form = new Form({

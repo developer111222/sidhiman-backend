@@ -6,12 +6,12 @@ const eventSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true, // Ensure title is required
-        trim: true
+        // trim: true
     },
-    description: {
+    content: {
         type: String,
         required: true, // Ensure description is required
-        trim: true
+        // trim: true
     },
     image:{
 type:String,
@@ -20,7 +20,7 @@ type:String,
     location: {
         type: String,
         required: true, // Ensure location is required
-        trim: true
+        // trim: true
     },
     startDate: {
         type: Date,
@@ -33,12 +33,12 @@ type:String,
     openingTime: {
         type: String,
         required: true, // Ensure opening time is required
-        trim: true
+        // trim: true
     },
     closeTime: {
         type: String,
         required: true, // Ensure close time is required
-        trim: true
+        // trim: true
     },
     slug: {
         type: String,

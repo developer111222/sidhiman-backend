@@ -70,9 +70,9 @@ exports.userlogin = async (req, res) => {
             path: "/", // cookie path
             //   Domain: ".onrender.com", // domain for the cookie
             secure: true, // accessible through HTTP
-            httpOnly: true, // only server can access the cookie
+            // httpOnly: true, // only server can access the cookie
             sameSite: "none", // enforcement type
-            partitioned: false,
+            // partitioned: false,
         }).status(200).json({ message: "Login successful" })
         
     } catch (error) {
@@ -85,7 +85,7 @@ exports.userlogin = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(req.user.id).select('username email role')
        return res.json(user);
     } catch (error) {
         console.error(error);

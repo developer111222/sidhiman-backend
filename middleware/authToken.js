@@ -3,11 +3,13 @@ const User = require('../model/usermodel')
 const key = process.env.JWT_SECRET;
 
 const authorizationUser = async (req, res, next) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.startsWith('Bearer ')
+
+  console.log(req.body)
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.startsWith('Bearer ')
     ? authHeader.split(' ')[1]
-    : null;
-    
+    : req.cookies.token; // Automatically extract the token from cookies
+  
     if (!token) {
         return res.status(401).json({ message: "Login is required" });
     }

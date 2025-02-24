@@ -44,10 +44,10 @@ exports.createEvent = async (req, res) => {
 exports.getAllEvents = async (req, res, next) => {
     try {
         const events = await Event.find().populate('author', 'username');
-        res.status(200).json(events);
+        return   res.status(200).json(events);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Failed to get all events', error: error.message });
+     return   res.status(500).json({ message: 'Failed to get all events', error: error.message });
     }
 }
 
@@ -62,10 +62,10 @@ exports.getSingleEvent = async (req, res, next) => {
         if (!event) {
             return res.status(404).json({ message: 'Event not found' });
         }
-        res.status(200).json(event);
+       return res.status(200).json(event);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Failed to get event', error: error.message });
+        return res.status(500).json({ message: 'Failed to get event', error: error.message });
     }
 }
 

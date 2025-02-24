@@ -15,7 +15,7 @@ const pageseoroute=require('./route/pageseoroute');
 const blogcategory=require('./route/blocategoryroute');
 const galleryroute=require('./route/galleryroute');
 const newsletterroute=require('./route/newsletterroute');
-const orderroute=require('./route/orderroute');
+// const orderroute=require('./route/orderroute');
 const gallerycategoryroute=require('./route/gallerycategoryroute');
 
 const crypto=require('crypto')
@@ -89,7 +89,7 @@ app.use('/api',pageseoroute);
 app.use('/api',blogcategory);
 app.use('/api',galleryroute);
 app.use('/api',newsletterroute);
-app.use('/api',orderroute);
+// app.use('/api',orderroute);
 app.use('/api',gallerycategoryroute);
 
 

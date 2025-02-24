@@ -9,7 +9,7 @@ const {authorizationUser}=require('../middleware/authToken')
 router.route('/signup').post(usersignup);
 router.route('/login').post(userlogin);
 router.route('/profile').get(authorizationUser,getProfile);
-router.route('/logout').post(userlogout);
+router.route('/logout').post(authorizationUser,userlogout);
 
 
 module.exports=router;

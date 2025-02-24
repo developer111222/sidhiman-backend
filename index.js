@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-    origin: 'http://localhost:3000',  
+    origin: 'https://www.sidhimanfoundation.org',  
     methods: ["GET", "PUT", "POST", "DELETE","PATCH", "OPTIONS"],
     allowedHeaders: [
         "Access-Control-Allow-Origin",

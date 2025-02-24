@@ -99,11 +99,11 @@ exports.getProfile = async (req, res) => {
 
 exports.userlogout = (req, res, next) => {
     console.log(req.body,"logout");
-    return res.clearCookie('token', {
+    res.clearCookie('token', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production', // Uncomment for production
         sameSite: 'none',
         path: '/' // Ensure the path matches the one used when setting the cookie
     });
-    res.status(200).json({ message: "Logout successful" });
+  return res.status(200).json({ message: "Logout successful" });
 }

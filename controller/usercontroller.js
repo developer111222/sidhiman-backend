@@ -102,7 +102,7 @@ exports.userlogout = (req, res, next) => {
     return res.clearCookie('token', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production', // Uncomment for production
-        sameSite: 'strict',
+        sameSite: 'none',
         path: '/' // Ensure the path matches the one used when setting the cookie
     });
     res.status(200).json({ message: "Logout successful" });

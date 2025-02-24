@@ -98,7 +98,7 @@ exports.getProfile = async (req, res) => {
 //----------------------------------user logout------------------------------
 
 exports.userlogout = (req, res, next) => {
-    console.log(req.body);
+    console.log(req.body,"logout");
     return res.clearCookie('token', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production', // Uncomment for production

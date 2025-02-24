@@ -100,7 +100,7 @@ exports.getProfile = async (req, res) => {
 exports.userlogout = (req, res, next) => {
     res.clearCookie('token', {
         httpOnly: true,
-        // secure: process.env.NODE_ENV === 'production', // Uncomment for production
+        secure: process.env.NODE_ENV === 'production', // Uncomment for production
         sameSite: 'strict',
         path: '/' // Ensure the path matches the one used when setting the cookie
     });
